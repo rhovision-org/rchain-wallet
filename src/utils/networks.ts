@@ -33,7 +33,7 @@ export interface RChainNetwork {
 	readonly faucet?: string;
 }
 
-export type NetworkName = 'localnet' | 'rhobot-bm' | 'rhobot' | 'mainnet';
+export type NetworkName = 'localnet' | 'rhobot-bm' | 'playground' | 'testnet' | 'mainnet';
 
 const default_ports_ssl: Partial<RNodeInfo> = { grpc: 40401, https: 443, httpAdmin: 40405 };
 
@@ -76,24 +76,49 @@ export const test_net_block_merge: RChainNetwork = {
 	faucet: 'https://status.bm.rhobot.rchain.coop/rhobot/faucet',
 };
 
-function rhobot_host(n: number) {
+// Rholang playground: rhobot.net's dev-mode node — which is what this wallet used to call its
+// "RChain testing network". It is a playground, not a testnet, so it says so now, and it has its own
+// hostname: playground.rhobot.net. rnodeapi.rhobot.net is the same node and stays as a read-only
+// fallback, so an old bookmark still resolves.
+function playground_host(n: number): RNodeInfo {
 	return {
-		//  domain: `node${n}.rhobot.rchain.coop`,
-		domain: 'rnodeapi.rhobot.net',
+		domain: 'playground.rhobot.net',
+		instance: `node${n}`,
+		...default_ports_ssl,
+	}
+}
+
+export const playground_net: RChainNetwork = {
+	title: 'Rholang playground',
+	name: 'playground',
+	hosts: u.range(0, 1).map(playground_host),
+	readOnlys: [
+		readonly_tag({ domain: 'playground.rhobot.net', ...default_ports_ssl }),
+		readonly_tag({ domain: 'rnodeapi.rhobot.net', instance: 'observer', ...default_ports_ssl }),
+		readonly_tag({ domain: 'rnode1.rhobot.net', ...default_ports_ssl }),
+	],
+	// The playground's own console is where /rholang faucet runs.
+	faucet: 'https://rhobot.net/',
+};
+
+// The real RChain testnet, on its own chain: testnet.rhobot.net (nginx -> node A's HTTP API).
+// Both testnet nodes run --propose-on-deploy, so a deploy is proposed by the node that receives it
+// and the wallet needs no admin URL here.
+function testnet_host(n: number): RNodeInfo {
+	return {
+		domain: 'testnet.rhobot.net',
 		instance: `node${n}`,
 		...default_ports_ssl,
 	}
 }
 
 export const test_net: RChainNetwork = {
-	title: 'RChain testing network',
-	name: 'rhobot',
-	hosts: u.range(0, 1).map(rhobot_host),
+	title: 'RChain testnet',
+	name: 'testnet',
+	hosts: u.range(0, 1).map(testnet_host),
 	readOnlys: [
-		readonly_tag({ domain: 'rnodeapi.rhobot.net', instance: 'observer', ...default_ports_ssl }),
-		readonly_tag({ domain: 'rnode1.rhobot.net', ...default_ports_ssl }),
+		readonly_tag({ domain: 'testnet.rhobot.net', instance: 'observer', ...default_ports_ssl }),
 	],
-	faucet: 'https://status.rchain.coop/rhobot/faucet'
 };
 
 function mainnet_host(n: number) {
