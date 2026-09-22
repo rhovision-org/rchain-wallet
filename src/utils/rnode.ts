@@ -14,7 +14,7 @@ let send_deploy = rnode_web.sendDeploy;
 let get_data_for_deploy = rnode_web.getDataForDeploy;
 let propose = rnode_web.propose;
 
-export type NetworkName = 'localnet' | 'testnet-bm' | 'testnet' | 'mainnet';
+export type NetworkName = 'localnet' | 'rhobot-bm' | 'playground' | 'testnet' | 'mainnet';
 
 export interface NodeUrls {
 	readonly network: NetworkName;

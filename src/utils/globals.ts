@@ -10,9 +10,10 @@ type ReadonlyNode = nw.RNodeReadonlyInfo;
 export let rnode_web = makeRNodeWeb({fetch, now: Date.now});
 
 export let networks = [
-	nw.main_net,
-	nw.local_net,
+	nw.playground_net,
 	nw.test_net,
+	nw.local_net,
+	nw.main_net,
 	nw.test_net_block_merge,
 ];
 
