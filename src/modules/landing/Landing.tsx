@@ -165,10 +165,10 @@ export function Landing() {
               <div className="Content">
                 <ul>
                   <li><a href="https://rhovision.org">Rho Vision</a></li>
-                  <li><a href="https://rchain-community.github.io">Rholang</a></li>
+                  <li><a href="https://rhovision-org.github.io">Rholang</a></li>
                   <li><a href="https://revdefine.io">Revdefine</a></li>
                   <li><a href="https://dappy.tech">Dappy</a></li>
-                  <li><a href="https://github.com/rchain-community">Community Github</a></li>
+                  <li><a href="https://github.com/rhovision-org">Community Github</a></li>
                 </ul>
               </div>
             </figure>
